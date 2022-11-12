@@ -1,0 +1,1 @@
+pythonw.exe -u main.py

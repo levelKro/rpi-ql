@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Étiquetteuse Brother QL - RPi-QL</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="vendors/base/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="images/favicon.ico" />
+  <script type="text/javascript" src="js/printerAPI.js"></script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo mr-5" href="index.html"><i class="ti-receipt mx-0"></i> RPi-QL</a>
+        <a class="navbar-brand brand-logo-mini" href="index.html"><i class="ti-receipt mx-0"></i></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="ti-view-list"></span>
+        </button>
+        <ul class="navbar-nav navbar-nav-right">
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+              <i class="ti-settings mx-0"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Contrôle</p>
+              <a class="dropdown-item">
+                <div class="item-thumbnail">
+                  <div class="item-icon bg-danger">
+                    <i class="ti-power-off mx-0"></i>
+                  </div>
+                </div>
+                <div class="item-content">
+                  <h6 class="font-weight-normal">Arrêt</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    Arrêter l'appareil
+                  </p>
+                </div>
+              </a>
+              <a class="dropdown-item">
+                <div class="item-thumbnail">
+                  <div class="item-icon bg-warning">
+                    <i class="ti-reload mx-0"></i>
+                  </div>
+                </div>
+                <div class="item-content">
+                  <h6 class="font-weight-normal">Redémarrage</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    Redémarrer l'appareil
+                  </p>
+                </div>
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="ti-view-list"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">
+              <i class="ti-home menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="ti-shortcode menu-icon"></i>
+              <span class="menu-title">Code à barre</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="barcode.html">Code à barre</a></li>
+                <li class="nav-item"> <a class="nav-link" href="archive.html">Archive</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="ti-pencil-alt menu-icon"></i>
+              <span class="menu-title">Textes</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="text.html"> Texte simple</a></li>
+                <li class="nav-item"> <a class="nav-link" href="textlarge.html"> Texte large</a></li>
+                <li class="nav-item"> <a class="nav-link" href="textimage.html"> Texte avec image</a></li>
+                <li class="nav-item"> <a class="nav-link" href="cable.html"> Nommer câblage</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="expire.html">
+              <i class="ti-calendar menu-icon"></i>
+              <span class="menu-title">Emballage et Expiration</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="address.html">
+              <i class="ti-envelope menu-icon"></i>
+              <span class="menu-title">Adresse</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="config.html">
+              <i class="ti-printer menu-icon"></i>
+              <span class="menu-title">Configuration</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+		  
+
+            <div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Code à barre</h4>
+                  <p class="card-description">
+                    Génère une étiquette avec un texte et un code à barre. Il est possible de placer le code en haut ou en bas. Vous pouvez ajouter une texte sous le code en plus petit.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','barcode'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Titre / Description</label>
+					  <div class="col-sm-9">
+						<input type="text" name="text" class="form-control" />
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte à encoder</label>
+					  <div class="col-sm-9">
+						<input type="text" name="code" class="form-control" />
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte sous le code</label>
+					  <div class="col-sm-9">
+						<input type="text" name="sub" class="form-control" />
+					  </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Position du code à barre</label>
+					  <div class="col-sm-5">                        
+						<select name="position" class="form-control" id="exampleSelectGender">
+                          <option>Haut</option>
+                          <option selected>Bas</option>
+                        </select>
+					  </div>					  
+                    </div>
+                    <div class="col-sm-12">
+					  <div class="form-group row form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input name="subview"type="checkbox" class="form-check-input">
+							Afficher le texte sous le code
+						</label>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input name="copie" type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+<!--
+			<div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Archive</h4>
+                  <p class="card-description">
+                    Génère un code à barre avec 5 chiffres (00001) avec une information. Peut ajouter un sous-titre pour les informations du propriétaire, ou une descrription.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','archive'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Titre / Description</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Sous-titre</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Numéro</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" value="00000"/>
+					  </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="col-sm-12">
+					  <div class="form-group row form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input">
+							Afficher le texte de sous-titre
+						</label>
+					  </div>
+                    </div>
+                    <div class="col-sm-12">
+					  <div class="form-group row form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input">
+							Auto-incrément après impression
+						</label>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Texte</h4>
+                  <p class="card-description">
+                    Génère une étiquette contenant le texte de manière à optimiser la largeur. La hauteur varie selon la longueur du texte.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','text'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Texte large (banderole)</h4>
+                  <p class="card-description">
+                    Génère une étiquette de type danderole d'une hauteur équivalent à la largeur du papier étiquette (62mm habituellement). Un texte long va demander beaucoup de papier.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','textLarge'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Nommer un câble</h4>
+                  <p class="card-description">
+                    Génère une étiquette avec un texte à gauche et à droite de manière a être replié sur lui-même quand il entoure un câble.
+					Un texte trop long rendra l'étiquette très fine et le texte très petit, soyez simple.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','cable'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+				    <div class="form-group row">
+					  <label class="col-sm-6 col-form-label">Comment l'utiliser</label>
+					  <div class="col-sm-6">
+					    <img src="images/demo-cable.jpg" width="100%"/>
+					  </div>
+				    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Texte avec image</h4>
+                  <p class="card-description">
+                    Génère une étiquette avec un texte et une image à gauche ou à droite. Prend le maximum d'espace selon la hauteur de l'image et/ou de la largeur disponible.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','textImage'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Image</label>
+					  <div class="col-sm-9">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>Images</option>
+                        </select>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Aperçu</label>
+					  <div class="col-sm-9">
+					    <img src="" id="textimagePreview" width="100%" />
+					  </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Position de l'image</label>
+					  <div class="col-sm-5">                        
+						<select class="form-control" id="exampleSelectGender">
+                          <option selected>Gauche</option>
+                          <option>Droite</option>
+                        </select>
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Hauteur max.</label>
+					  <div class="col-sm-5">                        
+						<select class="form-control" id="exampleSelectGender">
+                          <option>48</option>
+                          <option>64</option>
+                          <option>72</option>
+                          <option selected>80</option>
+                          <option>96</option>
+                          <option>112</option>
+                          <option>128</option>
+                        </select>
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Largeur max.</label>
+					  <div class="col-sm-5">                        
+						<select class="form-control" id="exampleSelectGender">
+                          <option>48</option>
+                          <option>64</option>
+                          <option>72</option>
+                          <option selected>80</option>
+                          <option>96</option>
+                          <option>112</option>
+                          <option>128</option>
+                        </select>
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-6 col-form-label">Priorié de redimension</label>
+					  <div class="col-sm-6">                        
+						<select class="form-control" id="exampleSelectGender">
+                          <option selected>Largeur (Wide)</option>
+                          <option>Hauteur (Portrait)</option>
+                        </select>
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-5 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
+						<i class="ti-printer btn-icon-prepend"></i>
+						Imprimer
+					</button>
+                    <button type="reset" class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Emballage et expiration</h4>
+                  <p class="card-description">
+                    Génère une étiquette avec un texte, si désiré, et affiche la date d'emballage. Vous pouvez ajouter une date d'expiration.
+                  </p>
+                  <form id="printerForm" onsubmit="printerAPI('printerForm','expire'); return false;">
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Texte</label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control" />
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Date d'emballage</label>
+					  <div class="col-sm-2">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>1</option>
+						  <option>2</option>
+						  <option>3</option>
+						  <option>4</option>
+						  <option>5</option>
+						  <option>6</option>
+						  <option>7</option>
+						  <option>8</option>
+						  <option>9</option>
+						  <option>10</option>
+						  <option>11</option>
+						  <option>12</option>
+						  <option>13</option>
+						  <option>14</option>
+						  <option>15</option>
+						  <option>16</option>
+						  <option>17</option>
+						  <option>18</option>
+						  <option>19</option>
+						  <option>20</option>
+						  <option>21</option>
+						  <option>22</option>
+						  <option>23</option>
+						  <option>24</option>
+						  <option>25</option>
+						  <option>26</option>
+						  <option>27</option>
+						  <option>28</option>
+						  <option>29</option>
+						  <option>30</option>
+						  <option>31</option>
+                        </select>
+					  </div>
+					  <div class="col-sm-4">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>1 - Janvier</option>
+						  <option>2 - Février</option>
+						  <option>3 - Mars</option>
+						  <option>4 - Avril</option>
+						  <option>5 - Mai</option>
+						  <option>6 - Juin</option>
+						  <option>7 - Juillet</option>
+						  <option>8 - Août</option>
+						  <option>9 - Septembre</option>
+						  <option>10 - Octobre</option>
+						  <option>11 - Novembre</option>
+						  <option>12 - Décembre</option>
+                        </select>
+					  </div>
+					  <div class="col-sm-3">
+						<input type="text" class="form-control" value="2022"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Date d'expiration</label>
+					  <div class="col-sm-2">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>1</option>
+						  <option>2</option>
+						  <option>3</option>
+						  <option>4</option>
+						  <option>5</option>
+						  <option>6</option>
+						  <option>7</option>
+						  <option>8</option>
+						  <option>9</option>
+						  <option>10</option>
+						  <option>11</option>
+						  <option>12</option>
+						  <option>13</option>
+						  <option>14</option>
+						  <option>15</option>
+						  <option>16</option>
+						  <option>17</option>
+						  <option>18</option>
+						  <option>19</option>
+						  <option>20</option>
+						  <option>21</option>
+						  <option>22</option>
+						  <option>23</option>
+						  <option>24</option>
+						  <option>25</option>
+						  <option>26</option>
+						  <option>27</option>
+						  <option>28</option>
+						  <option>29</option>
+						  <option>30</option>
+						  <option>31</option>
+                        </select>
+					  </div>
+					  <div class="col-sm-4">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>1 - Janvier</option>
+						  <option>2 - Février</option>
+						  <option>3 - Mars</option>
+						  <option>4 - Avril</option>
+						  <option>5 - Mai</option>
+						  <option>6 - Juin</option>
+						  <option>7 - Juillet</option>
+						  <option>8 - Août</option>
+						  <option>9 - Septembre</option>
+						  <option>10 - Octobre</option>
+						  <option>11 - Novembre</option>
+						  <option>12 - Décembre</option>
+                        </select>
+					  </div>
+					  <div class="col-sm-3">
+						<input type="text" class="form-control" value="2022"/>
+					  </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Options</h4>
+                  <p class="card-description">
+                    Paramètres de l'étiquette
+                  </p>
+                    <div class="col-sm-12">
+					  <div class="form-group row form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input" checked>
+							Afficher le texte
+						</label>
+					  </div>
+					</div>					
+                    <div class="col-sm-12">
+					  <div class="form-group row form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input">
+							Afficher la date d'expiration
+						</label>
+					  </div>					  
+					</div>
+                    <div class="form-group row">
+					  <label class="col-sm-7 col-form-label">Nombre de copie</label>
+					  <div class="col-sm-5">
+						<input type="text" class="form-control" value="1"/>
+					  </div>
+                    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-5 text-info" id="printerOutput">
+					  </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Imprimer</button>
+                    <button class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-8 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Administration</h4>
+                  <p class="card-description">
+                    Gérer quelques activités de votre appareil.
+                  </p>
+                  <form class="forms-sample">
+                    <div class="form-group row">
+					  <label class="col-sm-4 col-form-label">Alimentation</label>
+					  <div class="col-sm-3">
+						<button type="button" class="btn btn-danger btn-icon-text">
+                          <i class="ti-power-off btn-icon-prepend"></i>                                                    
+                          Arrêter
+                        </button>
+					  </div>
+					  <div class="col-sm-3">
+						<button type="button" class="btn btn-success btn-icon-text">
+                          <i class="ti-reload btn-icon-prepend"></i>                                                    
+                          Redémarrer
+                        </button>
+					  </div>
+					  <div class="col-sm-2">
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-4 col-form-label">Mise à jour</label>
+					  <div class="col-sm-3">
+						<button type="button" class="btn btn-warning btn-icon-text">
+                          <i class="ti-cloud-down btn-icon-prepend"></i>                                                    
+                          Lancer
+                        </button>
+					  </div>
+					  <div class="col-sm-5">
+						<p class="card-description">
+						  Ceci active la mise à jour via APT-GET, et après va redémarrer votre système. 
+						  Vous pouvez voir le log ici bas. Mais il est conseillé de le faire via SSH.
+						</p>
+					  </div>	
+					</div>
+                    <div class="form-group row">
+					  <label class="col-sm-4 col-form-label">Log de Mise à jour</label>
+					  <div class="col-sm-8">
+						<p class="card-description">
+						  Pas de mise à jour en cours.
+						</p>
+					  </div>					  
+                    </div>
+                </div>
+              </div>
+            </div>
+			
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Sécurité</h4>
+                  <p class="card-description">
+                    
+                  </p>
+				    <div class="form-group row">
+					  <label class="col-sm-6 col-form-label">Mot de passe</label>
+					  <div class="col-sm-6">
+					    <input type="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
+					  </div>
+				    </div>
+                    <div class="form-group row">
+					  <div class="col-sm-12">
+						<p class="card-description">
+						  Vous pouvez modifier les paramètres directement depuis le fichier <i>config.ini</i> présent dans le dossier du script dans l'appareil.
+						  <br/><br/>
+						  Vous avez plus de paramètres modifiable depuis ce fichier. Consulter la documentation du projet pour ples de détails.
+						  
+						</p>
+					  </div>					  
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Configuration</h4>
+                  <p class="card-description">
+                    Paramètre de votre système d'impression d'étiquette, ceci affecte les configurations globales.
+                  </p>
+                  <form class="forms-sample">
+					<h3 class="card-title">Imprimante Brother QL</h3>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Modèle </label>
+					  <div class="col-sm-3">
+						<select class="form-control" id="exampleSelectGender">
+                          <option>QL-500</option>
+						  <option>QL-550</option>
+						  <option>QL-560</option>
+						  <option>QL-570</option>
+						  <option>QL-580N</option>
+						  <option>QL-650TD</option>
+						  <option>QL-700</option>
+						  <option>QL-710W</option>
+						  <option>QL-720NW</option>
+						  <option>QL-800</option>
+						  <option>QL-810W</option>
+						  <option>QL-820NWB</option>
+						  <option>QL-1050</option>
+						  <option>QL-1060N</option>
+                        </select>
+					  </div>					  
+					  <label class="col-sm-2 col-form-label">Port USB </label>
+					  <div class="col-sm-4">
+						<input type="text" class="form-control"/>
+					  </div>					  
+                    </div>
+                    <div class="form-group row">
+					  <label class="col-sm-3 col-form-label">Numéro de série </label>
+					  <div class="col-sm-9">
+						<input type="text" class="form-control"/>
+					  </div>					  
+                    </div>
+					
+					
+                    <button type="submit" class="btn btn-primary mr-2">Sauvegarder</button>
+                    <button class="btn btn-light">Recommencer</button>
+                  </form>
+                </div>
+              </div>
+            </div>			
+-->            
+        
+		</div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2018 <a href="https://www.templatewatch.com/" target="_blank">Templatewatch</a>. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="vendors/base/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- inject:js -->
+  <script src="js/off-canvas.js"></script>
+  <script src="js/hoverable-collapse.js"></script>
+  <script src="js/template.js"></script>
+  <script src="js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="js/file-upload.js"></script>
+  <!-- End custom js for this page-->
+</body>
+
+</html>
