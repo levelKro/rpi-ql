@@ -105,6 +105,8 @@ function updateAPI(id) {
 		if (updateAPICall.readyState==4 && updateAPICall.status==200) {
 			var result=updateAPICall.responseText;
 			document.getElementById("updateOutput").innerText=result;
+			setTimeout("updateAPI('updateOutput')",2000);
+			document.getElementById("updateOutput").scrollTop = document.getElementById("updateOutput").scrollHeight;
 		}
 	}
 	updateAPICall.open("POST","/manage/update/log?r="+Math.random(),true);
