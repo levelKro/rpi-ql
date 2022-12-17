@@ -84,6 +84,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             fs = os.fstat(f.fileno())
 
             self.send_response(200)
+            self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Content-type", ctype)
             self.send_header("Content-Length", str(fs[6]))
             self.send_header("Last-Modified",
@@ -95,9 +96,59 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             finally:
                 f.close()
             ##return http.server.SimpleHTTPRequestHandler.do_GET(self)
+        elif pathSection[1] == "api":
+            outputJson={"result":"error","reason":"Invalid action"}
+            values=""
+#             try:
+            if pathSection[2] == "images":
+                imgs=[]
+                for x in os.listdir("images"):
+                    if x.endswith(".jpg") or x.endswith(".png") or x.endswith(".ico"):
+                        imgs.append(x)
+                        
+                outputJson={"result":"success","reason":"Get images","images":imgs}
+            elif pathSection[2] == "image":
+                image="images/"+pathSection[3]
+                try:
+                    f = open(image, 'rb')
+                except OSError:
+                    self.send_response(404)
+                    self.send_header("Content-type", "text/html")
+                    self.end_headers()
+                    self.wfile.write(bytes('Document requested is not found.', "utf-8"))
+                    return None
+
+                ctype = self.guess_type(image)
+                fs = os.fstat(f.fileno())
+
+                self.send_response(200)
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Content-type", ctype)
+                self.send_header("Content-Length", str(fs[6]))
+                self.send_header("Last-Modified",
+                    self.date_time_string(fs.st_mtime))
+                self.end_headers()            
+
+                try:
+                    self.copyfile(f, self.wfile)
+                finally:
+                    f.close()
+                return
+                
+                    
+#             except:
+#                 outputJson={"result":"error","reason":"Error when processing the request."}
+#                 pass
+                    
+            self.send_response(200)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            return self.wfile.write(bytes(json.dumps(outputJson), "utf-8"))
         
         elif pathSection[1] == "print":
             self.send_response(200)
+            self.send_header("Access-Control-Allow-Origin", "*")
             self.send_header("Content-type", "application/json")
             self.end_headers()
             outputJson={"result":"error","reason":"Invalid action"}
@@ -128,20 +179,17 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                         outputJson={"result":"error","reason":"Text is missing."}
                         
                 elif pathSection[2] == "textImage":
+                    print("ok1")
                     if(postDatas.get('text') is not None):
+                        print("ok2")
                         values=values+' -a textimage -k "'+str(copie)+'" -t "'+str(postDatas['text'])+'"'
                         if(postDatas.get('image') is not None):
+                            print("ok3")
                             #if exists
-                            values=values+' -i "'+postDatas['image']+'"'
-                        else:
-                            if(postDatas.get('x') is not None):
-                                values=values+' -x "'+postDatas['x']+'"'
-                            if(postDatas.get('y') is not None):
-                                values=values+' -y "'+postDatas['y']+'"'
+                            values=values+' -i "'+str(postDatas['image'])+'"'
                             if(postDatas.get('position') is not None!=""):
-                                values=values+' -d "'+postDatas['position']+'"'
-                            if(postDatas.get('mode') is not None!=""):
-                                values=values+' -r "'+postDatas['mode']+'"'
+                                print("ok4")
+                                values=values+' -d "'+str(postDatas['position'])+'"'
                             outputJson={"result":"success","reason":"Printing text with image label."}
                             self.goPrint(str(values))
                     else:
@@ -156,30 +204,32 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                         outputJson={"result":"error","reason":"Text is missing."}
                         
                 elif pathSection[2] == "barcode":
-                    if(postDatas.get('text') is not None):
-                        values=values+' -a barcode -k "'+str(copie)+'" -t "'+str(postDatas['text'])+'"'
-                        if(postDatas.get('code') is not None):
-                            values=values+' -c "'+str(postDatas['code'])+'"'
-                            if(postDatas.get('position') is not None!=""):
-                                values=values+' -d "'+str(postDatas['position'])+'"'
-                            if(postDatas.get('sub') is not None!=""):
-                                values=values+' -s "'+str(postDatas['sub'])+'"'
-                            outputJson={"result":"success","reason":"Printing barcode label."}
-                            self.goPrint(str(values))
-                        else:
-                            outputJson={"result":"error","reason":"String to encode is missing."}
+                    values=values+' -a barcode -k "'+str(copie)+'"'
+                    if(postDatas.get('code') is not None):
+                        values=values+' -c "'+str(postDatas['code'])+'"'
+                        if(postDatas.get('text') is not None):
+                            values=values+'" -t "'+str(postDatas['text'])+'"'
+                        if(postDatas.get('position') is not None!=""):
+                            values=values+' -d "'+str(postDatas['position'])+'"'
+                        if(postDatas.get('sub') is not None!=""):
+                            values=values+' -s "'+str(postDatas['sub'])+'"'
+                        outputJson={"result":"success","reason":"Printing barcode label."}
+                        self.goPrint(str(values))
+                    else:
+                        outputJson={"result":"error","reason":"String to encode is missing."}
                             
                 elif pathSection[2] == "archive":
-                    if(postDatas.get('text') is not None):
-                        values=values+' -a archive -k "'+str(copie)+'" -t "'+str(postDatas['text'])+'"'
-                        if(postDatas.get('code') is not None):
-                            values=values+' -c "'+str(postDatas['code'])+'"'
-                            if(postDatas.get('sub') is not None):
-                                values=values+' -n "'+str(postDatas['sub'])+'"'
-                            outputJson={"result":"success","reason":"Printing archive label."}
-                            self.goPrint(str(values))
-                        else:
-                            outputJson={"result":"error","reason":"String to encode is missing."}
+                    values=values+' -a archive -k "'+str(copie)+'"'
+                    if(postDatas.get('code') is not None):
+                        values=values+' -c "'+str(postDatas['code'])+'"'
+                        if(postDatas.get('text') is not None):
+                            values=values+'" -t "'+str(postDatas['text'])+'"'
+                        if(postDatas.get('sub') is not None):
+                            values=values+' -n "'+str(postDatas['sub'])+'"'
+                        outputJson={"result":"success","reason":"Printing archive label."}
+                        self.goPrint(str(values))
+                    else:
+                        outputJson={"result":"error","reason":"String to encode is missing."}
                     
                 elif pathSection[2] == "expire":
                     if(postDatas.get('packed') is not None or postDatas.get('expired') is not None ):
@@ -369,11 +419,21 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         except:
             ##tmp=subprocess.Popen('python3 core.py'+str(values).replace("['","").replace("']",""), shell=True)
             print("Can't run the command.")
-            
+def oledshow(info,xtra="",noimg=False):
+    try:
+        if(noimg):
+            noimg=' -x "1"'
+        else:
+            noimg=""
+        os.system('python3 oled.py -t "RPi-QL" -i "'+str(info)+'" -n "'+str(xtra)+'"'+noimg)
+    except:
+        print("Can't run OLED script")
+        
 def start():
     pcStats = MyHttpRequestHandler
     pcStatsServer = socketserver.TCPServer(("0.0.0.0", int(config['web']['port'])), pcStats)
     print("*** RUNNING WEB SERVER AT PORT "+str(config['web']['port'])+" ***")
+    oledshow("Ready!","://:ipaddr::"+str(config['web']['port'])+"/")
     pcStatsServer.serve_forever()
 
             

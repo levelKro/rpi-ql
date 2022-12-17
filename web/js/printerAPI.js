@@ -114,3 +114,24 @@ function updateAPI(id) {
 	updateAPICall.send(params);	
 	return false;
 }
+
+function loadImages(id) {
+	if (window.XMLHttpRequest) { loadImagesAPICall=new XMLHttpRequest(); }
+	else { loadImagesAPICall=new ActiveXObject("Microsoft.XMLHTTP"); }
+	loadImagesAPICall.onreadystatechange=function() {
+		if (loadImagesAPICall.readyState==4 && loadImagesAPICall.status==200) {
+			var result=loadImagesAPICall.responseText;	
+			var values=JSON.parse(result);	
+			document.getElementById("imageList").innerHTML="";
+			for (var i=0; i<values.images.length; i++){
+				document.getElementById("imageList").innerHTML+='<option value="images/'+values.images[i]+'">'+values.images[i]+'</option>';
+			}
+		}
+	}
+	loadImagesAPICall.open("GET","/api/images?r="+Math.random(),true);
+	loadImagesAPICall.send();	
+	return false;
+}
+function changeImage() {
+	document.getElementById("textimagePreview").src=document.getElementById("imageList").value.replace("images/","api/image/");
+}

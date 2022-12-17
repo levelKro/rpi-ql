@@ -114,15 +114,15 @@
                     <div class="form-group row">
 					  <label class="col-sm-3 col-form-label">Image</label>
 					  <div class="col-sm-9">
-						<select name="image" class="form-control" id="imageList">
-                          <option>Images</option>
+						<select name="image" class="form-control" id="imageList" onchange="changeImage()">
+                          <option> </option>
                         </select>
 					  </div>
                     </div>
                     <div class="form-group row">
 					  <label class="col-sm-3 col-form-label">Aperçu</label>
 					  <div class="col-sm-9">
-					    <img src="" id="textimagePreview" width="100%" />
+					    <img src="" id="textimagePreview" style="height:128px" />
 					  </div>
                     </div>
                 </div>
@@ -140,45 +140,8 @@
 					  <label class="col-sm-7 col-form-label">Position de l'image</label>
 					  <div class="col-sm-5">                        
 						<select name="position" class="form-control">
-                          <option selected>Gauche</option>
-                          <option>Droite</option>
-                        </select>
-					  </div>					  
-                    </div>
-                    <div class="form-group row">
-					  <label class="col-sm-7 col-form-label">Hauteur max.</label>
-					  <div class="col-sm-5">                        
-						<select name="y" class="form-control">
-                          <option>48</option>
-                          <option>64</option>
-                          <option>72</option>
-                          <option selected>80</option>
-                          <option>96</option>
-                          <option>112</option>
-                          <option>128</option>
-                        </select>
-					  </div>					  
-                    </div>
-                    <div class="form-group row">
-					  <label class="col-sm-7 col-form-label">Largeur max.</label>
-					  <div class="col-sm-5">                        
-						<select name="x" class="form-control">
-                          <option>48</option>
-                          <option>64</option>
-                          <option>72</option>
-                          <option selected>80</option>
-                          <option>96</option>
-                          <option>112</option>
-                          <option>128</option>
-                        </select>
-					  </div>					  
-                    </div>
-                    <div class="form-group row">
-					  <label class="col-sm-6 col-form-label">Priorié de redimension</label>
-					  <div class="col-sm-6">                        
-						<select name="mode" class="form-control">
-                          <option selected>Largeur (Wide)</option>
-                          <option>Hauteur (Portrait)</option>
+                          <option value="left" selected>Gauche</option>
+                          <option value="right">Droite</option>
                         </select>
 					  </div>					  
                     </div>
@@ -192,7 +155,7 @@
 					  <div class="col-sm-5 text-info" id="printerOutput">
 					  </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text" disabled>
+                    <button type="submit" class="btn btn-primary mr-2 btn-icon-text">
 						<i class="ti-printer btn-icon-prepend"></i>
 						Imprimer
 					</button>
@@ -201,6 +164,9 @@
                 </div>
               </div>
             </div>
+			  <script type="text/javascript">
+			  loadImages();
+			  </script>
         
 		</div>
         </div>
