@@ -177,7 +177,7 @@ class appQL(wx.Frame):
         labelAppDescription.SetFont(wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "Segoe UI"))
         gridAboutContentLeft.Add(labelAppDescription, 0, 0, 0)
 
-        labelAppVersion = wx.StaticText(self.appSectionAbout, wx.ID_ANY, "v1.2.1106")
+        labelAppVersion = wx.StaticText(self.appSectionAbout, wx.ID_ANY, "v1.2.1217")
         gridAboutContentLeft.Add(labelAppVersion, 0, 0, 0)
 
         label_20 = wx.StaticText(self.appSectionAbout, wx.ID_ANY, u"Créé par Mathieu Légaré (levelKro)")
@@ -255,7 +255,7 @@ class appQL(wx.Frame):
 
         gridSectionTextImage.Add((0, 0), 0, 0, 0)
 
-        gridTextimageContent = wx.FlexGridSizer(5, 3, 5, 5)
+        gridTextimageContent = wx.FlexGridSizer(4, 3, 5, 5)
         gridSectionTextImage.Add(gridTextimageContent, 1, wx.EXPAND, 0)
 
         labelextimageText = wx.StaticText(self.appSectionTextImage, wx.ID_ANY, "Texte :")
@@ -265,30 +265,6 @@ class appQL(wx.Frame):
         gridTextimageContent.Add(self.textimageInput, 0, wx.EXPAND, 0)
 
         gridTextimageContent.Add((0, 0), 0, 0, 0)
-
-        labelTextimageDimensions = wx.StaticText(self.appSectionTextImage, wx.ID_ANY, "Taille max :")
-        gridTextimageContent.Add(labelTextimageDimensions, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
-
-        gridTextimageDimensions = wx.FlexGridSizer(1, 4, 0, 5)
-        gridTextimageContent.Add(gridTextimageDimensions, 1, wx.ALIGN_CENTER, 0)
-
-        labelTextimageWidth = wx.StaticText(self.appSectionTextImage, wx.ID_ANY, "Largeur :")
-        gridTextimageDimensions.Add(labelTextimageWidth, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
-
-        self.textimageMaxWidth = wx.ComboBox(self.appSectionTextImage, wx.ID_ANY, choices=self.MARGES, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
-        self.textimageMaxWidth.SetSelection(4)
-        gridTextimageDimensions.Add(self.textimageMaxWidth, 0, 0, 0)
-
-        labelTextimageHeight = wx.StaticText(self.appSectionTextImage, wx.ID_ANY, "Hauteur :")
-        gridTextimageDimensions.Add(labelTextimageHeight, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
-
-        self.textimageMaxHeight = wx.ComboBox(self.appSectionTextImage, wx.ID_ANY, choices=self.MARGES, style=wx.CB_DROPDOWN | wx.TE_PROCESS_ENTER)
-        self.textimageMaxHeight.SetSelection(4)
-        gridTextimageDimensions.Add(self.textimageMaxHeight, 0, 0, 0)
-
-        self.textimageMode = wx.Choice(self.appSectionTextImage, wx.ID_ANY, choices=["Largeur (Wide)", "Hauteur (Portrait)"])
-        self.textimageMode.SetSelection(0)
-        gridTextimageContent.Add(self.textimageMode, 0, 0, 0)
 
         labelTextimageImage = wx.StaticText(self.appSectionTextImage, wx.ID_ANY, "Image :")
         gridTextimageContent.Add(labelTextimageImage, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
@@ -355,18 +331,16 @@ class appQL(wx.Frame):
         self.barcodeInputCode = wx.TextCtrl(self.appSectionBarcode, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
         gridBarcodeContent.Add(self.barcodeInputCode, 0, wx.EXPAND, 0)
 
-        self.barcodeDirection = wx.ComboBox(self.appSectionBarcode, wx.ID_ANY, choices=["Code en bas", "Code en haut"], style=wx.CB_DROPDOWN | wx.CB_READONLY)
+        self.barcodeDirection = wx.ComboBox(self.appSectionBarcode, wx.ID_ANY, choices=["Code en bas", "Code en haut", "Code à gauche", "Code à droite"], style=wx.CB_DROPDOWN | wx.CB_READONLY)
         self.barcodeDirection.SetSelection(0)
         gridBarcodeContent.Add(self.barcodeDirection, 0, 0, 0)
 
-        labelBarcodeSub = wx.StaticText(self.appSectionBarcode, wx.ID_ANY, "Texte sous code :")
-        gridBarcodeContent.Add(labelBarcodeSub, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
-
-        self.barcodeInputSub = wx.TextCtrl(self.appSectionBarcode, wx.ID_ANY, "", style=wx.TE_PROCESS_ENTER)
-        gridBarcodeContent.Add(self.barcodeInputSub, 0, wx.EXPAND, 0)
-
-        self.barcodeSub = wx.CheckBox(self.appSectionBarcode, wx.ID_ANY, "Afficher")
+        gridBarcodeContent.Add((0, 0), 0, 0, 0)
+        
+        self.barcodeSub = wx.CheckBox(self.appSectionBarcode, wx.ID_ANY, "Afficher le code")
         gridBarcodeContent.Add(self.barcodeSub, 0, wx.ALIGN_CENTER_VERTICAL, 0)
+        
+        gridBarcodeContent.Add((0, 0), 0, 0, 0)
 
         gridBarcodeContent.Add((0, 0), 0, 0, 0)
 
@@ -567,7 +541,7 @@ class appQL(wx.Frame):
         gridSectionText.AddGrowableRow(1)
         gridSectionText.AddGrowableCol(1)
 
-        gridTextimageContent.AddGrowableRow(4)
+        gridTextimageContent.AddGrowableRow(3)
         gridTextimageContent.AddGrowableCol(1)
 
         gridSectionTextImage.AddGrowableRow(1)
@@ -619,7 +593,6 @@ class appQL(wx.Frame):
                 
         self.barcodeInputText.Bind(wx.EVT_TEXT_ENTER, self.printBarcode)
         self.barcodeInputCode.Bind(wx.EVT_TEXT_ENTER, self.printBarcode)
-        self.barcodeInputSub.Bind(wx.EVT_TEXT_ENTER, self.printBarcode)
                 
         self.archivesInputText.Bind(wx.EVT_TEXT_ENTER, self.printArchives)
         self.archivesInputCode.Bind(wx.EVT_TEXT_ENTER, self.printArchives)
@@ -628,8 +601,6 @@ class appQL(wx.Frame):
         self.textInput.Bind(wx.EVT_TEXT_ENTER, self.printText)
         
         self.textimageInput.Bind(wx.EVT_TEXT_ENTER, self.printTextimage)
-        self.textimageMaxWidth.Bind(wx.EVT_TEXT_ENTER, self.printTextimage)
-        self.textimageMaxHeight.Bind(wx.EVT_TEXT_ENTER, self.printTextimage)
         
         self.expireInput.Bind(wx.EVT_TEXT_ENTER, self.printExpire)        
         self.expireDateIn.Bind(wx.EVT_TEXT_ENTER, self.printExpire)        
@@ -660,11 +631,15 @@ class appQL(wx.Frame):
             copies = self.showCopies()
             values ='-a barcode -t "'+text+'" -c "'+code+'"'
             if(subVisible):
-                values=values+' -s "'+sub+'"'
+                values=values+' -r 1'
             if(codeDirection == 1):
-                values=values+' -d "up"'
+                values=values+' -d "top"'
+            elif(codeDirection == 2):
+                values=values+' -d "left"'
+            elif(codeDirection == 3):
+                values=values+' -d "right"'
             else:
-                values=values+' -d "down"'
+                values=values+' -d "bottom"'
             self.goPrint(values,copies)
             try:
                 event.Skip()
@@ -719,8 +694,6 @@ class appQL(wx.Frame):
         text = str(self.textimageInput.GetValue())
         image = str(self.PATH_IMAGES + self.LIST_IMAGES[self.textimageImage.GetSelection()])
         imageDirection = str(self.textimageDirection.GetSelection())
-        imageWidth = int(self.textimageMaxWidth.GetValue())
-        imageHeight = int(self.textimageMaxHeight.GetValue())
         if(text==""):
             self.showMessage("Vous devez définir un texte.")
         elif(image==""):
@@ -728,10 +701,6 @@ class appQL(wx.Frame):
         else:
             copies = self.showCopies()
             values ='-a textimage -t "'+text+'" -i "'+image+'"'
-            if(imageWidth>=1):
-                values=values+' -x '+str(imageWidth)
-            if(imageHeight>=1):
-                values=values+' -y '+str(imageHeight)
             if(imageDirection=="1"):
                 values=values+' -d "right"'
             else:
