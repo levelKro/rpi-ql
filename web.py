@@ -25,8 +25,12 @@ print("Setting web directory")
 WEBPATH=scriptpath + config["web"]["path"]
 #os.chdir(WEBPATH)
 
-
-
+if(str(config['default']['oled'])=="True"):
+    print("OLed Enabled")
+    OLED=True
+else:
+    OLED=False
+    
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     update = False
     def do_GET(self):
@@ -223,7 +227,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     if(postDatas.get('code') is not None):
                         values=values+' -c "'+str(postDatas['code'])+'"'
                         if(postDatas.get('text') is not None):
-                            values=values+'" -t "'+str(postDatas['text'])+'"'
+                            values=values+' -t "'+str(postDatas['text'])+'"'
                         if(postDatas.get('sub') is not None):
                             values=values+' -n "'+str(postDatas['sub'])+'"'
                         outputJson={"result":"success","reason":"Printing archive label."}
@@ -402,7 +406,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            outputJson={"result":"success","web":"2.2.1106","rpiql":"1.2.1106","rpiqlgui":"1.2.1106"}
+            outputJson={"result":"success","web":"2.2.1224","rpiql":"1.2.1218","rpiqlgui":"1.2.1218"}
             return self.wfile.write(bytes(json.dumps(outputJson), "utf-8"))
         
         else:
@@ -413,22 +417,51 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         return
         
     def goPrint(self,values):
-        print("Send to printer : "+str(values))
+        strclean=str(values).replace("['","").replace("']","")
+        print("Send to printer : "+strclean)
         try:
-            os.system('python3 core.py'+str(values).replace("['","").replace("']",""))
+            os.system('python3 core.py'+strclean)
         except:
             ##tmp=subprocess.Popen('python3 core.py'+str(values).replace("['","").replace("']",""), shell=True)
             print("Can't run the command.")
+            
 def oledshow(info,xtra="",noimg=False):
-    try:
+    if(OLED==True):
+#         try:
         if(noimg):
             noimg=' -x "1"'
         else:
             noimg=""
-        os.system('python3 oled.py -t "RPi-QL" -i "'+str(info)+'" -n "'+str(xtra)+'"'+noimg)
-    except:
-        print("Can't run OLED script")
-        
+        if(info=="Ready!"):
+            writeOLED("standby")
+        else:
+            writeOLED("edit",[{"type":"1","posx":"0","posy":"0","text":"RPi-QL"},{"type":"2","posx":"0","posy":"12","text":str(info)},{"type":"3","posx":"0","posy":"23","text":str(xtra)}],{"file":"logo.jpg","posx":"0","posy":"0"},3)
+            #os.system('python3 oled.py -t "RPi-QL" -i "'+str(info)+'" -n "'+str(xtra)+'"'+noimg)
+#         except:
+#             print("Can't run OLED script")
+ 
+def writeOLED(mode,lines=False,icon=False,mintime=0):
+    saveconfig = configparser.ConfigParser()
+    saveconfig['info']={}
+    saveconfig['info']['mode']=str(mode)
+    saveconfig['info']['mintime']=str(mintime)
+    if(lines):
+        x=1
+        for line in lines:
+            saveconfig['line'+str(x)]=line
+            x=int(x + 1)
+        saveconfig['info']['lines']=str(int(x - 1))
+    else:
+        saveconfig['info']['lines']="0"
+    if(icon):
+        saveconfig['info']['icon']=icon['file']
+        saveconfig['info']['icon_posx']=icon['posx']
+        saveconfig['info']['icon_posy']=icon['posy']
+    else:
+        saveconfig['info']['icon']="False"
+    with open('oled/'+str(int(dt.now().timestamp()))+'.oled', 'w', encoding='utf-8') as configfile:    # save
+        saveconfig.write(configfile) 
+ 
 def start():
     pcStats = MyHttpRequestHandler
     pcStatsServer = socketserver.TCPServer(("0.0.0.0", int(config['web']['port'])), pcStats)

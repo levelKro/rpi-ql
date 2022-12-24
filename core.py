@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw, ImageFont
-import getopt, sys, os, time
+import getopt, sys, os, time, datetime
 import treepoem, configparser
+from datetime import datetime
 
 #
 # Étiquetteuse Brother-QL
@@ -14,7 +15,29 @@ def loadConfig():
     global config
     config = configparser.ConfigParser()
     config.read('config.ini', encoding='utf-8')
-    
+
+def writeOLED(mode,lines=False,icon=False,mintime=0):
+    saveconfig = configparser.ConfigParser()
+    saveconfig['info']={}
+    saveconfig['info']['mode']=str(mode)
+    saveconfig['info']['mintime']=str(mintime)
+    if(lines):
+        x=1
+        for line in lines:
+            saveconfig['line'+str(x)]=line
+            x=int(x + 1)
+        saveconfig['info']['lines']=str(int(x - 1))
+    else:
+        saveconfig['info']['lines']="0"
+    if(icon):
+        saveconfig['info']['icon']=icon['file']
+        saveconfig['info']['icon_posx']=icon['posx']
+        saveconfig['info']['icon_posy']=icon['posy']
+    else:
+        saveconfig['info']['icon']="False"
+    with open('oled/'+str(int(datetime.now().timestamp()))+'.oled', 'w', encoding='utf-8') as configfile:    # save
+        saveconfig.write(configfile)
+
 loadConfig()
 
 bqlModel=config['printer']['model']
@@ -132,7 +155,15 @@ def oledshow(info,xtra="",noimg=False):
                 noimg=' -x "1"'
             else:
                 noimg=""
-            os.system('python3 oled.py -t "RPi-QL" -i "'+str(info)+'" -n "'+str(xtra)+'"'+noimg)
+            if(info=="Ready!"):
+                writeOLED("standby")
+            else:
+                writeOLED("edit",
+                          [{"type":"1","posx":"0","posy":"0","text":"RPi-QL"},
+                           {"type":"2","posx":"0","posy":"12","text":str(info)},
+                           {"type":"3","posx":"0","posy":"23","text":str(xtra)}],
+                          {"file":"logo.jpg","posx":"0","posy":"0"},3)
+            #os.system('python3 oled.py -t "RPi-QL" -i "'+str(info)+'" -n "'+str(xtra)+'"'+noimg)
         except:
             print("Can't run OLED script")
         
