@@ -1,13 +1,13 @@
 from PIL import Image, ImageDraw, ImageFont
 import getopt, sys, os, time, datetime
-import treepoem, configparser
+import configparser
 from datetime import datetime
 
 #
 # Étiquetteuse Brother-QL
 # par Mathieu Légaré <levelkro@yahoo.ca>
 #
-# v1.2.1217
+# v1.3.0309
 #
 
 config=False    
@@ -307,14 +307,17 @@ if action == "text":
     oledshow("Text label","Generating...")
     debug("Generate a text label")
     try:
+        labelH=int(outHeight / 2)
         debug("Getting dimension of text")
         txt_w=img_text_max(text,outWidth,outHeight,"w")
         txt_h=img_text_max(text,outWidth,outHeight,"h")
         txt_f=img_text_max(text,outWidth,outHeight)
         debug("Creating the workspace")
-        img_new(txt_w,txt_h) 
+        img_new(outWidth,outHeight)
+        txtPosX=int((outWidth - txt_w) / 2)
+        txtPosY=int((outHeight - txt_h) / 2)
         debug("Adding text to draw") 
-        img_text(0,0,txt_f,text)
+        img_text(txtPosX,txtPosY,txt_f,text)
         debug("Saving the file")
         img_save(outFile)
     except Exception as e:
@@ -551,6 +554,7 @@ elif action == "expire":
 elif action == "barcode":
     #-a barcode -t "text" -c "code" [-d "left|top|right|bottom(default)"]
     oledshow("Barcode label","Generating...")
+    import treepoem
     debug("Generate a barcode label")
     try:
         outHalfWidth=int((outWidth / 2) - 10)
@@ -619,6 +623,7 @@ elif action == "archive":
     #-a barcode -t "text" -c "code" [-d "left|top|right|bottom(default)"]
     oledshow("Archive label","Generating...")
     debug("Generate archiving label (text with barcode, with display code forced)")
+    import treepoem
     debug("The barcode is at down of label")
     try:
         outHalfWidth=int((outWidth / 2) - 10)

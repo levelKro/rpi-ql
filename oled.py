@@ -7,10 +7,7 @@ import socket
 from datetime import datetime
 
 #
-# Étiquetteuse Brother-QL
 # par Mathieu Légaré <levelkro@yahoo.ca>
-#
-# v1.2.1218
 #
 
 config=False    
@@ -61,23 +58,24 @@ if(config['default']['oled']=="True"):
     mode="standby"
     standby_show=1
     standby_last=0
+    oled_image = Image.new('1', (disp.width, disp.height), "WHITE")
+    oled_draw = ImageDraw.Draw(oled_image) 
     while True:
         display=False
         for x in sorted(os.listdir("oled"), reverse=False):
             if x.endswith(".oled"):
-                oled_image = Image.new('1', (disp.width, disp.height), "WHITE")
-                oled_draw = ImageDraw.Draw(oled_image)   
+                oled_draw.rectangle((0, 0,disp.width, disp.height), outline=255, fill=1)
                 try:
                     display = configparser.ConfigParser()
                     display.read("oled/"+x, encoding='utf-8')
                     mode=display['info']['mode']
                     if(mode=="edit"):
+                        oled_draw.rectangle((0, 0,disp.width, disp.height), outline=255, fill=1)
                         i=1         
                         while i<=int(display['info']['lines']):
                             oled_draw.text((int(display['line'+str(i)]['posx']),int(display['line'+str(i)]['posy'])), pasteText(display['line'+str(i)]['text']), font = getFontFromType(display['line'+str(i)]['type']), fill = 0)
                             i=int(i + 1)
                         #oled_image=oled_image.rotate(0)       
-                        disp.clear()  
                         disp.ShowImage(disp.getbuffer(oled_image))
                         if(display['info']['mintime'] != "False" or display['info']['mintime'] != "0"):
                             time.sleep(int(display['info']['mintime']))
@@ -86,8 +84,7 @@ if(config['default']['oled']=="True"):
                     print("Error with file "+str(x))
                 os.remove("oled/"+x)
         if(mode=="standby" and int(datetime.now().timestamp() - standby_last) >= 10):
-            oled_image = Image.new('1', (disp.width, disp.height), "WHITE")
-            oled_draw = ImageDraw.Draw(oled_image) 
+            oled_draw.rectangle((0, 0,disp.width, disp.height), outline=255, fill=1)
             if(standby_show==1):
                 #Standby with custom display
                 standby_show=2
@@ -106,9 +103,7 @@ if(config['default']['oled']=="True"):
                 img = Image.open("oled/oled_standby.jpg")
                 oled_image.paste(img, (0,0))
             #oled_image=oled_image.rotate(0)      
-            disp.clear()     
             disp.ShowImage(disp.getbuffer(oled_image))
-            print("Display standby")
             standby_last=datetime.now().timestamp()
 
        
