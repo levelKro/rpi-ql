@@ -8,14 +8,15 @@ function printerAPI(id,action) {
 	   params += fieldName + '=' + fieldValue + '&';
 	}	
 	if (action == "expire") {
-		ed=document.getElementById("dateoutday").value();
-		em=document.getElementById("dateoutmonth").value().split(" ")[0];
-		ey=document.getElementById("dateoutyear").value();
-		pd=document.getElementById("dateinday").value().split(" ")[0];
-		pm=document.getElementById("dateinmonth").value();
-		py=document.getElementById("dateinyear").value();
+		ed=document.getElementById("dateoutday")[document.getElementById("dateoutday").selectedIndex].value;
+		em=document.getElementById("dateoutmonth")[document.getElementById("dateoutmonth").selectedIndex].value;
+		pd=document.getElementById("dateinday")[document.getElementById("dateinday").selectedIndex].value;
+		pm=document.getElementById("dateinmonth")[document.getElementById("dateinmonth").selectedIndex].value;
+		
+		ey=document.getElementById("dateoutyear").value;
+		py=document.getElementById("dateinyear").value;
 		params+="packed="+pd+"-"+pm+"-"+py;
-		if (document.getElementById("expireVisible").checked()) {
+		if (document.getElementById("expireVisible").checked) {
 			params+="&expired="+ed+"-"+em+"-"+ey;
 		}
 	}
