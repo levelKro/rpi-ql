@@ -213,10 +213,10 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                         values=values+' -c "'+str(postDatas['code'])+'"'
                         if(postDatas.get('text') is not None):
                             values=values+'" -t "'+str(postDatas['text'])+'"'
-                        if(postDatas.get('position') is not None!=""):
+                        if(postDatas.get('position') is not None):
                             values=values+' -d "'+str(postDatas['position'])+'"'
-                        if(postDatas.get('sub') is not None!=""):
-                            values=values+' -s "'+str(postDatas['sub'])+'"'
+                        if(postDatas.get('sub') is not None):
+                            values=values+' -r "'+str(postDatas['sub'])+'"'
                         outputJson={"result":"success","reason":"Printing barcode label."}
                         self.goPrint(str(values))
                     else:
